@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Selamat Ulang Tahun!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Element Animasi Latar -->
+  <canvas id="canvas-fireworks"></canvas>
+  <div class="balloon-container" id="balloon-container"></div>
+
+  <!-- Konten Utama -->
+  <div class="container">
+    <h1 class="title">🎉 Selamat Ulang Tahun! 🎉</h1>
+    <p class="subtitle">Ajeng Aminah ❤️ </p>
+
+    <div class="card-wrapper" onclick="toggleCard(this)">
+      <div class="card" id="card">
+        
+        <!-- TAMPILAN DEPAN KARTU -->
+        <div class="card-front">
+          <img src="image/WhatsApp Image 2026-07-23 at 20.32.32.jpeg" alt="Foto Yang Berulang Tahun" class="profile-photo">
+          <h3>✨ For Someone Special ✨</h3>
+          <p class="card-hint">(Klik untuk membuka)</p>
+        </div>
+
+        <!-- TAMPILAN BELAKANG KARTU -->
+        <div class="card-back">
+          <p>
+            Selamat ulang tahun! Semoga semua mimpi dan cita-cita kam di tahun ini satu per satu terwujud. Wish you filled with love, laughter, and endless joy
+            Semoga di usiandu yg baru ini,setiap langkahndu dipermudah,dan selalu dikelilingi oleh orang' tersayang.happy birthday mett🥳🥰🥰❤️🎂✨
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" onclick="triggerConfetti()">🚀 Ledakkan Kembang Api</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Flip Kartu
+    function toggleCard(wrapper) {
+      const card = wrapper.querySelector('.card');
+      card.classList.toggle('flipped');
+      createFireworksBatch(5);
+    }
+
+    // 2. Generator Balon
+    const balloonColors = ['#f43f5e', '#38bdf8', '#fbbf24', '#a855f7', '#4ade80'];
+    const balloonContainer = document.getElementById('balloon-container');
+
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      
+      const randomColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+      balloon.style.backgroundColor = randomColor;
+      balloon.style.left = Math.random() * 100 + 'vw';
+      balloon.style.animationDuration = (Math.random() * 4 + 6) + 's';
+      
+      balloonContainer.appendChild(balloon);
+
+      setTimeout(() => {
+        balloon.remove();
+      }, 10000);
+    }
+
+    setInterval(createBalloon, 800);
+
+    // 3. Engine Kembang Api (Canvas API)
+    const canvas = document.getElementById('canvas-fireworks');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 6 + 1;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.friction = 0.98;
+        this.gravity = 0.05;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      update() {
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 0.015;
+      }
+    }
+
+    function createFireworksBatch(count) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const x = Math.random() * canvas.width;
+          const y = Math.random() * (canvas.height * 0.5);
+          const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+          for (let p = 0; p < 40; p++) {
+            particles.push(new Particle(x, y, color));
+          }
+        }, i * 200);
+      }
+    }
+
+    function triggerConfetti() {
+      createFireworksBatch(8);
+    }
+
+    function animateFireworks() {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.2)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p, index) => {
+        if (p.alpha <= 0) {
+          particles.splice(index, 1);
+        } else {
+          p.update();
+          p.draw();
+        }
+      });
+
+      requestAnimationFrame(animateFireworks);
+    }
+
+    animateFireworks();
+    setTimeout(() => createFireworksBatch(3), 500);
+  </script>
+</body>
+</html>

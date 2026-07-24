@@ -1,0 +1,222 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e1b4b, #311042);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Canvas Kembang Api */
+#canvas-fireworks {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Balon Animasi */
+.balloon-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.balloon {
+  position: absolute;
+  bottom: -100px;
+  width: 50px;
+  height: 65px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  animation: floatUp 8s infinite linear;
+  opacity: 0.8;
+}
+
+.balloon::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 22px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 10px solid inherit;
+}
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -22px;
+  left: 24px;
+  width: 2px;
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120vh) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* Container Utama */
+.container {
+  z-index: 10;
+  text-align: center;
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #f43f5e, #fbbf24, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.98); }
+  100% { transform: scale(1.03); }
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 25px;
+}
+
+/* Kartu Interactive 3D Flip */
+.card-wrapper {
+  perspective: 1000px;
+  margin: 10px auto;
+  width: 100%;
+  max-width: 380px;
+  height: 360px;
+  cursor: pointer;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-front {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  backdrop-filter: blur(10px);
+}
+
+.card-front h3 {
+  font-size: 1.4rem;
+  color: #fbbf24;
+  margin-bottom: 5px;
+}
+
+.card-hint {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #147acd, #0b2da8);
+  transform: rotateY(180deg);
+  text-align: center;
+}
+
+/* Style Foto */
+.profile-photo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fbbf24;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+  margin-bottom: 15px;
+}
+
+.card-back p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #ffe4e6;
+}
+
+/* Control Buttons */
+.controls {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: linear-gradient(45deg, #ec4899, #8b5cf6);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3deg);
+  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.6);
+}
+
+.btn:active {
+  transform: translateY(1deg);
+}
